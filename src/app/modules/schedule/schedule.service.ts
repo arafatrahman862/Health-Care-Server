@@ -2,15 +2,16 @@ import { addHours, addMinutes, format } from "date-fns";
 import { prisma } from "../../shared/prisma";
 
 const insertIntoDB = async (payload: any) => {
-    const {startTime, endTime, startDate, endDate} = payload;
-    const intervalTime = 30; // minutes
+  const { startTime, endTime, startDate, endDate } = payload;
+  
+  const intervalTime = 30; // minutes
 
-    const schedules = [];
+  const schedules = [];
 
-    const currentDate = new Date(startDate);
-    const lastDate = new Date(endDate);
+  const currentDate = new Date(startDate);
+  const lastDate = new Date(endDate);
 
-while(currentDate <= lastDate){
+  while (currentDate <= lastDate) {
     const startDateTime = new Date(
       addMinutes(
         addHours(
@@ -29,30 +30,35 @@ while(currentDate <= lastDate){
         Number(endTime.split(":")[1])
       )
     );
-    while (startDateTime < endDateTime){
-        const slotStartDateTime = startDateTime;
-        const slotEndDateTime = addMinutes(startDateTime, intervalTime);
+    while (startDateTime < endDateTime) {
+      const slotStartDateTime = startDateTime;
+      const slotEndDateTime = addMinutes(startDateTime, intervalTime);
 
-        const scheduleData = {
-            startDateTime: slotStartDateTime,
-            endDateTime: slotEndDateTime
-        }
+      const scheduleData = {
+        startDateTime: slotStartDateTime,
+        endDateTime: slotEndDateTime,
+      };
 
-        const existingSchedule = await prisma.schedule.findFirst({
-          where: scheduleData,
+      const existingSchedule = await prisma.schedule.findFirst({
+        where: scheduleData,
+      });
+
+      if (!existingSchedule) {
+        const result = await prisma.schedule.create({
+          data: scheduleData,
         });
-
-        if(!existingSchedule){
-          const result = await prisma.schedule.create({
-            data: scheduleData
-          });
-          schedules.push(result)
-        }
+        schedules.push(result);
+      }
+      slotStartDateTime.setMinutes(
+        slotStartDateTime.getMinutes() + intervalTime
+      );
     }
-    
-}
 
-  return payload;
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+
+  return schedules;
 };
 
 export const ScheduleService = {
