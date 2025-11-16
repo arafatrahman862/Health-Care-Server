@@ -120,9 +120,16 @@ if (filterStartDateTime && filterEndDateTime) {
   };
 };
 
-
+const deleteScheduleDromDB = async (id: string) => {
+return await prisma.schedule.delete({
+  where: {
+    id
+  }
+})
+}
 
 export const ScheduleService = {
   insertIntoDB,
   scheduleForDoctor,
+  deleteScheduleDromDB,
 };

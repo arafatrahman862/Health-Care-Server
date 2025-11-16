@@ -21,9 +21,23 @@ const filters = pick(req.query, ["startDateTime", "endDateTime"])
   const result = await ScheduleService.scheduleForDoctor(filters, options);
 
   sendResponse(res, {
-    statusCode: 201,
+    statusCode: 200,
     success: true,
     message: "Schedule fetched successfully",
+    data: result.data,
+    meta: result.meta
+  });
+});
+
+
+const deleteScheduleDromDB = catchAsync(async (req: Request, res: Response) => {
+ const {id} = req.params;
+ const result = await ScheduleService.deleteScheduleDromDB(id)
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Schedule deleted successfully",
     data: result,
   });
 });
@@ -31,4 +45,5 @@ const filters = pick(req.query, ["startDateTime", "endDateTime"])
 export const ScheduleController = {
   insertIntoDB,
   scheduleForDoctor,
+  deleteScheduleDromDB,
 };

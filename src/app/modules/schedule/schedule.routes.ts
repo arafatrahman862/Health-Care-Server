@@ -6,9 +6,13 @@ const router = express.Router();
 router.get("/", ScheduleController.scheduleForDoctor);
 
 
+
 router.post(
     "/",
 ScheduleController.insertIntoDB
 );
+
+router.delete("/:id", ScheduleController.deleteScheduleDromDB);
+
 
 export const scheduleRoutes = router;
