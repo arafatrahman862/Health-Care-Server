@@ -17,7 +17,7 @@ const getAllFromDB = catchAsync(async (req: Request, res: Response) => {
 });
 
 const inserIntoDB = catchAsync(async (req: Request, res: Response) => {
-  const result = await SpecialtiesService.inserIntoDB();
+  const result = await SpecialtiesService.inserIntoDB(req);
   sendResponse(res, {
     statusCode: 200,
     success: true,
