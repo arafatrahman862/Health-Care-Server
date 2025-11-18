@@ -146,7 +146,44 @@ return updatedData;
   
 };
 
+const getByIdFromDB = async (id: string) => {
+  const result = await prisma.patient.findUnique({
+    where: {
+      id,
+      isDeleted: false,
+    },
+  });
+  return result;
+};
+
+const softDelete = async (id: string) => {
+  return await prisma.patient.delete({
+    where: {
+      id,
+    },
+  });
+};
+
+const deleteFromDB = async (id: string) => {
+  return await prisma.admin.delete({
+    where: {
+      id,
+    },
+  });
+};
+
+const getAISuggestions = async (payload:any) => {
+  return payload;
+   
+  
+};
+
+
 export const DoctorService = {
   getAllFromDB,
   updateIntoDB,
+  getByIdFromDB,
+  softDelete,
+  deleteFromDB,
+  getAISuggestions,
 };

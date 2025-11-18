@@ -11,7 +11,15 @@ router.get(
   DoctorController.getAllFromDB
 );
 
-router.patch("/:id", DoctorController.updateIntoDB);
+router.post("/suggestion", DoctorController.getAISuggestions);
+
+router.get("/:id", DoctorController.getByIdFromDB);
+
+router.patch("/:id",auth(UserRole.ADMIN, UserRole.DOCTOR) ,DoctorController.updateIntoDB);
+
+router.delete("/:id", DoctorController.deleteFromDB);
+
+router.delete("/soft/:id", DoctorController.softDelete);
 
 
 export const DoctorRoutes = router;
